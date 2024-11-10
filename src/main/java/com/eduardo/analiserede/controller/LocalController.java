@@ -24,8 +24,8 @@ public class LocalController {
 
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
-  public LocalDTO criarLocal(@RequestBody @Valid LocalDTO local) {
-    return localService.salvar(local);
+  public LocalDTO criarLocal(@RequestBody @Valid LocalDTO local, @RequestHeader("emailUsuario") String emailUsuario) {
+    return localService.salvar(local, emailUsuario);
   }
 
   @GetMapping

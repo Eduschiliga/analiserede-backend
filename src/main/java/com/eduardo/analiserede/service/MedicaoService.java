@@ -3,7 +3,6 @@ package com.eduardo.analiserede.service;
 import com.eduardo.analiserede.entity.Local;
 import com.eduardo.analiserede.entity.Medicao;
 import com.eduardo.analiserede.mapper.MedicaoMapper;
-import com.eduardo.analiserede.model.dto.LocalDTO;
 import com.eduardo.analiserede.model.dto.MedicaoDTO;
 import com.eduardo.analiserede.repository.LocalRepository;
 import com.eduardo.analiserede.repository.MedicaoRepository;
@@ -62,8 +61,8 @@ public class MedicaoService {
     medicaoRepository.delete(medicao);
   }
 
-  public MedicaoDTO atualizar(MedicaoDTO medicaoDTO, Long idMedicao) {
-    Medicao medicao = medicaoRepository.findById(idMedicao)
+  public MedicaoDTO atualizar(MedicaoDTO medicaoDTO) {
+    Medicao medicao = medicaoRepository.findById(medicaoDTO.getId())
         .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
     medicao.setData(medicaoDTO.getData());

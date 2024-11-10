@@ -1,7 +1,7 @@
 package com.eduardo.analiserede.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -28,4 +28,9 @@ public class Local {
       CascadeType.REFRESH
   })
   private List<Medicao> medicoes = new ArrayList<>();
+
+  @ManyToOne
+  @JoinColumn(name = "usuario_id", nullable = false)
+  @NotNull
+  private Usuario usuario;
 }

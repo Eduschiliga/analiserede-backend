@@ -3,7 +3,6 @@ package com.eduardo.analiserede.controller;
 import com.eduardo.analiserede.model.dto.MedicaoDTO;
 import com.eduardo.analiserede.service.MedicaoService;
 import jakarta.validation.Valid;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +19,9 @@ public class MedicaoController {
     this.medicaoService = medicaoService;
   }
 
-  @PostMapping
+  @PostMapping()
   @ResponseStatus(code = HttpStatus.CREATED)
-  public MedicaoDTO criarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @PathParam("idLocal") Long idLocal) {
+  public MedicaoDTO criarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @RequestHeader Long idLocal) {
     return medicaoService.criarMedicao(medicaoDTO, idLocal);
   }
 
@@ -36,9 +35,9 @@ public class MedicaoController {
     return ResponseEntity.ok().body(medicaoService.buscarPorId(id));
   }
 
-  @PutMapping("/{idMedicao}")
-  public ResponseEntity<MedicaoDTO> atualizarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @PathVariable Long idMedicao) {
-    return ResponseEntity.ok().body(medicaoService.atualizar(medicaoDTO, idMedicao));
+  @PutMapping()
+  public ResponseEntity<MedicaoDTO> atualizarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO) {
+    return ResponseEntity.ok().body(medicaoService.atualizar(medicaoDTO));
   }
 
   @DeleteMapping("/{idMedicao}")
