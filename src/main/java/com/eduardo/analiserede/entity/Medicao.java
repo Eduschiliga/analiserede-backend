@@ -2,9 +2,12 @@ package com.eduardo.analiserede.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -19,7 +22,7 @@ public class Medicao {
   private Long id;
 
   @Column(name = "data_medicao")
-  private LocalDateTime data;
+  private LocalDate data;
 
   @Column(name = "nivel_sinal_24ghz_medicao")
   private Integer nivel_sinal_24ghz;

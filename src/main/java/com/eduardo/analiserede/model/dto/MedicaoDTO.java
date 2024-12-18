@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class MedicaoDTO {
   private Long id;
-  private LocalDateTime data;
+  private LocalDate data;
   private Integer nivel_sinal_24ghz;
   private Integer nivel_sinal_5ghz;
   private Float velocidade_24ghz;

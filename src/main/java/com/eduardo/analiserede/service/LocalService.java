@@ -1,8 +1,10 @@
 package com.eduardo.analiserede.service;
 
 import com.eduardo.analiserede.entity.Local;
+import com.eduardo.analiserede.entity.Medicao;
 import com.eduardo.analiserede.entity.Usuario;
 import com.eduardo.analiserede.mapper.LocalMapper;
+import com.eduardo.analiserede.mapper.MedicaoMapper;
 import com.eduardo.analiserede.mapper.UsuarioMapper;
 import com.eduardo.analiserede.model.dto.LocalDTO;
 import com.eduardo.analiserede.repository.LocalRepository;
@@ -11,8 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,13 +23,17 @@ public class LocalService {
   private final UsuarioRepository usuarioRepository;
   private final UsuarioMapper usuarioMapper;
   private final LocalMapper localMapper;
+  private final MedicaoMapper medicaoMapper;
+  private final MedicaoService medicaoService;
 
   @Autowired
-  public LocalService(LocalRepository localRepository, UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, LocalMapper localMapper) {
+  public LocalService(LocalRepository localRepository, UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, LocalMapper localMapper, MedicaoMapper medicaoMapper, MedicaoService medicaoService) {
     this.localRepository = localRepository;
     this.usuarioRepository = usuarioRepository;
     this.usuarioMapper = usuarioMapper;
     this.localMapper = localMapper;
+    this.medicaoMapper = medicaoMapper;
+    this.medicaoService = medicaoService;
   }
 
   public LocalDTO salvar(@Valid LocalDTO localDTO, String emailUsuario) {
@@ -37,22 +43,34 @@ public class LocalService {
       Local local = this.localMapper.localDTOtoLocal(localDTO);
       local.setUsuario(usuario);
 
-      return this.localMapper.localToLocalDTO(this.localRepository.save(local));
+      List<Medicao> medicaoTemp = null;
+      if (localDTO.getMedicoes() != null) {
+        medicaoTemp = local.getMedicoes();
+        local.setMedicoes(new ArrayList<>());
+      }
+
+      localDTO = this.localMapper.localToLocalDTO(this.localRepository.save(local));
+
+      if (medicaoTemp != null) {
+        for (Medicao m : medicaoTemp) {
+          this.medicaoService.criarMedicao(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getId());
+        }
+        localDTO.setMedicoes(this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoTemp));
+      }
+
+      return localDTO;
     }
     return null;
   }
 
   public LocalDTO buscarPorId(Long id) {
-    Local local = localRepository.findById(id)
-        .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
+    Local local = localRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
     return localMapper.localToLocalDTO(local);
   }
 
-  public List<LocalDTO> buscarTodos() {
-    return localRepository.findAll().stream()
-        .map(localMapper::localToLocalDTO)
-        .collect(Collectors.toList());
+  public List<LocalDTO> buscarTodos(Long usuarioId) {
+    return localRepository.findAllByUsuario_Id(usuarioId).stream().map(localMapper::localToLocalDTO).collect(Collectors.toList());
   }
 
   public void deletar(Long id) {
@@ -64,12 +82,40 @@ public class LocalService {
   }
 
 
-  public LocalDTO atualizar(@Valid LocalDTO localDTO) {
-    Local l = this.localRepository.findById(localDTO.getId()).orElseThrow(() -> new RuntimeException("Local com id:" + localDTO.getId() + "Não encontrado"));
-
-    if (l != null) {
-      return this.localMapper.localToLocalDTO(this.localRepository.save(l));
+  public LocalDTO atualizar(LocalDTO localDTO) {
+    if (localDTO.getId() == null) {
+      throw new IllegalArgumentException("ID não pode ser nulo para atualizar Local.");
     }
-    return null;
+
+    Local local = this.localRepository.findById(localDTO.getId()).orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
+
+    local.setNome(localDTO.getNome());
+
+
+    List<Medicao> medicaoTemp = null;
+    if (localDTO.getMedicoes() != null) {
+      Local localTemp = this.localMapper.localDTOtoLocal(localDTO);
+      medicaoTemp = localTemp.getMedicoes();
+      local.setMedicoes(new ArrayList<>());
+    }
+
+    localDTO = this.localMapper.localToLocalDTO(this.localRepository.save(local));
+
+
+    List<Medicao> medicaoAdicionada = new ArrayList<>();
+    if (medicaoTemp != null) {
+      local.setMedicoes(new ArrayList<>());
+      for (Medicao m : medicaoTemp) {
+        if (m.getId() == null) {
+          medicaoAdicionada.add(this.medicaoMapper.medicaoDTOtoMedicao(this.medicaoService.criarMedicao(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getId())));
+        } else {
+          medicaoAdicionada.add(this.medicaoMapper.medicaoDTOtoMedicao(this.medicaoService.atualizar(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getId())));
+        }
+      }
+      localDTO.setMedicoes(this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoAdicionada));
+    }
+
+
+    return localDTO;
   }
 }

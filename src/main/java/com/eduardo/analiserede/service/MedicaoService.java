@@ -45,8 +45,8 @@ public class MedicaoService {
         medicao.getInterferencia());
   }
 
-  public List<MedicaoDTO> buscarTodos() {
-    return this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoRepository.findAll());
+  public List<MedicaoDTO> buscarTodos(Long usuarioId) {
+    return this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoRepository.findAllByLocal_Usuario_Id(usuarioId));
   }
 
   public MedicaoDTO buscarPorId(Long id) {
@@ -61,10 +61,14 @@ public class MedicaoService {
     medicaoRepository.delete(medicao);
   }
 
-  public MedicaoDTO atualizar(MedicaoDTO medicaoDTO) {
+  public MedicaoDTO atualizar(MedicaoDTO medicaoDTO, Long idLocal) {
     Medicao medicao = medicaoRepository.findById(medicaoDTO.getId())
         .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
+    Local local = localRepository.findById(idLocal)
+        .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
+
+    medicao.setLocal(local);
     medicao.setData(medicaoDTO.getData());
     medicao.setNivel_sinal_24ghz(medicaoDTO.getNivel_sinal_24ghz());
     medicao.setNivel_sinal_5ghz(medicaoDTO.getNivel_sinal_5ghz());

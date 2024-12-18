@@ -25,9 +25,9 @@ public class MedicaoController {
     return medicaoService.criarMedicao(medicaoDTO, idLocal);
   }
 
-  @GetMapping
-  public ResponseEntity<List<MedicaoDTO>> buscarLocais() {
-    return ResponseEntity.ok().body(medicaoService.buscarTodos());
+  @GetMapping("usuario/{usuarioId}")
+  public ResponseEntity<List<MedicaoDTO>> buscarLocais(@PathVariable Long usuarioId) {
+    return ResponseEntity.ok().body(medicaoService.buscarTodos(usuarioId));
   }
 
   @GetMapping("/{id}")
@@ -35,9 +35,9 @@ public class MedicaoController {
     return ResponseEntity.ok().body(medicaoService.buscarPorId(id));
   }
 
-  @PutMapping()
-  public ResponseEntity<MedicaoDTO> atualizarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO) {
-    return ResponseEntity.ok().body(medicaoService.atualizar(medicaoDTO));
+  @PutMapping("local/{localId}")
+  public ResponseEntity<MedicaoDTO> atualizarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @PathVariable Long localId) {
+    return ResponseEntity.ok().body(medicaoService.atualizar(medicaoDTO, localId));
   }
 
   @DeleteMapping("/{idMedicao}")

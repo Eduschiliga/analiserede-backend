@@ -13,6 +13,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/local")
+@CrossOrigin(origins = "*")
 public class LocalController {
 
   private final LocalService localService;
@@ -28,9 +29,9 @@ public class LocalController {
     return localService.salvar(local, emailUsuario);
   }
 
-  @GetMapping
-  public ResponseEntity<List<LocalDTO>> buscarLocais() {
-    return ResponseEntity.ok().body(localService.buscarTodos());
+  @GetMapping("/usuario/{usuarioId}")
+  public ResponseEntity<List<LocalDTO>> buscarLocais(@PathVariable Long usuarioId) {
+    return ResponseEntity.ok().body(localService.buscarTodos(usuarioId));
   }
 
   @GetMapping("/{id}")
