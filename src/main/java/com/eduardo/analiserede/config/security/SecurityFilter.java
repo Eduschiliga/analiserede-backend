@@ -1,6 +1,7 @@
 package com.eduardo.analiserede.config.security;
 
 import com.eduardo.analiserede.entity.Usuario;
+import com.eduardo.analiserede.exception.TokenJWTException;
 import com.eduardo.analiserede.repository.UsuarioRepository;
 import com.eduardo.analiserede.service.TokenService;
 import jakarta.servlet.FilterChain;
@@ -26,16 +27,28 @@ public class SecurityFilter extends OncePerRequestFilter {
     String tokenJWT = recuperarToken(request);
 
     if (tokenJWT != null) {
-      String subject = tokenService.getSubject(tokenJWT);
+      try {
+        if (tokenService.isTokenExpirado(tokenJWT)) {
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          response.getWriter().write("Token expirado.");
+          return;
+        }
 
-      Usuario usuario = usuarioRepository.findByLogin(subject);
+        String subject = tokenService.getSubject(tokenJWT);
 
-      UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+        Usuario usuario = usuarioRepository.findByLogin(subject);
 
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+      } catch (TokenJWTException e) {
+        throw new TokenJWTException("Token inválido", e.getStatus());
+      }
+
     }
-
     filterChain.doFilter(request, response);
+
   }
 
   private String recuperarToken(HttpServletRequest request) {

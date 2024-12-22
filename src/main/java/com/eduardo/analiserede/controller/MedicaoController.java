@@ -24,7 +24,7 @@ public class MedicaoController {
   public ResponseEntity<MedicaoDTO> criarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @RequestHeader Long idLocal, UriComponentsBuilder uriBuilder) {
     MedicaoDTO medicao = medicaoService.criarMedicao(medicaoDTO, idLocal);
 
-    URI uri = uriBuilder.path("/api/medicao/{id}").buildAndExpand(medicao.getId()).toUri();
+    URI uri = uriBuilder.path("/api/medicao/{medicaoId}").buildAndExpand(medicao.getMedicaoId()).toUri();
     return ResponseEntity.created(uri).body(medicao);
   }
 
@@ -33,9 +33,9 @@ public class MedicaoController {
     return ResponseEntity.ok().body(medicaoService.buscarTodos(usuarioId));
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<MedicaoDTO> buscarPorId(@PathVariable Long id) {
-    return ResponseEntity.ok().body(medicaoService.buscarPorId(id));
+  @GetMapping("/{medicaoId}")
+  public ResponseEntity<MedicaoDTO> buscarPorId(@PathVariable Long medicaoId) {
+    return ResponseEntity.ok().body(medicaoService.buscarPorId(medicaoId));
   }
 
   @PutMapping("local/{localId}")

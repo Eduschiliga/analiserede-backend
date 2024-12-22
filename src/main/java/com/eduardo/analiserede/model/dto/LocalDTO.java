@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LocalDTO {
-  private Long id;
+  private Long localId;
   private String nome;
   private List<MedicaoDTO> medicoes;
 }

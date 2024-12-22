@@ -18,7 +18,7 @@ import java.time.LocalDate;
 public class Medicao {
   @Id
   @Column(name = "medicao_id")
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long medicaoId;
 
   @Column(name = "data")

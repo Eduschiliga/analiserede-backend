@@ -19,14 +19,14 @@ import java.util.List;
 @Table(name = "local")
 public class Local {
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "local_id")
   private Long localId;
 
-  @Column(name = "nome", nullable = true, length = 180)
+  @Column(name = "nome", length = 180)
   private String nome;
 
-  @OneToMany(mappedBy = "local", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "local", orphanRemoval = true, cascade = CascadeType.ALL)
   private List<Medicao> medicoes = new ArrayList<>();
 
   @ManyToOne

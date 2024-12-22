@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class MedicaoDTO {
-  private Long id;
+  private Long medicaoId;
   private LocalDate data;
   private Integer nivel_sinal_24ghz;
   private Integer nivel_sinal_5ghz;

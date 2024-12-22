@@ -25,7 +25,7 @@ public class LocalController {
   public ResponseEntity<LocalDTO> criarLocal(@RequestBody @Valid LocalDTO local, @RequestHeader("emailUsuario") String emailUsuario, UriComponentsBuilder uriBuilder) {
     LocalDTO localDTO = localService.salvar(local, emailUsuario);
 
-    URI uri = uriBuilder.path("/api/local/{id}").buildAndExpand(localDTO.getId()).toUri();
+    URI uri = uriBuilder.path("/api/local/{id}").buildAndExpand(localDTO.getLocalId()).toUri();
     return ResponseEntity.created(uri).body(localDTO);
   }
 
@@ -34,9 +34,9 @@ public class LocalController {
     return ResponseEntity.ok().body(localService.buscarTodos(usuarioId));
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<LocalDTO> buscarPorId(@PathVariable @NotNull Long id) {
-    return ResponseEntity.ok().body(localService.buscarPorId(id));
+  @GetMapping("/{localId}")
+  public ResponseEntity<LocalDTO> buscarPorId(@PathVariable @NotNull Long localId) {
+    return ResponseEntity.ok().body(localService.buscarPorId(localId));
   }
 
   @DeleteMapping("/{id}")

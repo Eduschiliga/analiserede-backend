@@ -31,7 +31,7 @@ public class UsuarioService {
   }
 
   public UsuarioDTO atualizar(UsuarioDTO usuarioDTO) {
-    Usuario usuario = usuarioRepository.findById(usuarioDTO.getId()).orElseThrow(() -> new RuntimeException("Usuário com id:" + usuarioDTO.getId() + "Não encontrado"));
+    Usuario usuario = usuarioRepository.findById(usuarioDTO.getUsuarioId()).orElseThrow(() -> new RuntimeException("Usuário com id:" + usuarioDTO.getUsuarioId() + "Não encontrado"));
 
     usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 

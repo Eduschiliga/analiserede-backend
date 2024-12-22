@@ -58,7 +58,7 @@ public class MedicaoService {
   }
 
   public MedicaoDTO atualizar(MedicaoDTO medicaoDTO, Long idLocal) {
-    Medicao medicao = medicaoRepository.findById(medicaoDTO.getId())
+    Medicao medicao = medicaoRepository.findById(medicaoDTO.getMedicaoId())
         .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
     Local local = localRepository.findById(idLocal)
