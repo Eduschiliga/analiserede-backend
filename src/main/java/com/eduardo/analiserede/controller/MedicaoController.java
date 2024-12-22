@@ -3,26 +3,29 @@ package com.eduardo.analiserede.controller;
 import com.eduardo.analiserede.model.dto.MedicaoDTO;
 import com.eduardo.analiserede.service.MedicaoService;
 import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/medicao")
+@AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class MedicaoController {
-
   private final MedicaoService medicaoService;
-
-  public MedicaoController(MedicaoService medicaoService) {
-    this.medicaoService = medicaoService;
-  }
 
   @PostMapping()
   @ResponseStatus(code = HttpStatus.CREATED)
-  public MedicaoDTO criarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @RequestHeader Long idLocal) {
-    return medicaoService.criarMedicao(medicaoDTO, idLocal);
+  public ResponseEntity<MedicaoDTO> criarMedicao(@RequestBody @Valid MedicaoDTO medicaoDTO, @RequestHeader Long idLocal, UriComponentsBuilder uriBuilder) {
+    MedicaoDTO medicao = medicaoService.criarMedicao(medicaoDTO, idLocal);
+
+    URI uri = uriBuilder.path("/api/medicao/{id}").buildAndExpand(medicao.getId()).toUri();
+    return ResponseEntity.created(uri).body(medicao);
   }
 
   @GetMapping("usuario/{usuarioId}")

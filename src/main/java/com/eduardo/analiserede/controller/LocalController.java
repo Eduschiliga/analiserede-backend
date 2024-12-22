@@ -4,29 +4,29 @@ import com.eduardo.analiserede.model.dto.LocalDTO;
 import com.eduardo.analiserede.service.LocalService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/local")
 @CrossOrigin(origins = "*")
+@AllArgsConstructor
 public class LocalController {
-
   private final LocalService localService;
-
-  @Autowired
-  public LocalController(LocalService localService) {
-    this.localService = localService;
-  }
 
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
-  public LocalDTO criarLocal(@RequestBody @Valid LocalDTO local, @RequestHeader("emailUsuario") String emailUsuario) {
-    return localService.salvar(local, emailUsuario);
+  public ResponseEntity<LocalDTO> criarLocal(@RequestBody @Valid LocalDTO local, @RequestHeader("emailUsuario") String emailUsuario, UriComponentsBuilder uriBuilder) {
+    LocalDTO localDTO = localService.salvar(local, emailUsuario);
+
+    URI uri = uriBuilder.path("/api/local/{id}").buildAndExpand(localDTO.getId()).toUri();
+    return ResponseEntity.created(uri).body(localDTO);
   }
 
   @GetMapping("/usuario/{usuarioId}")

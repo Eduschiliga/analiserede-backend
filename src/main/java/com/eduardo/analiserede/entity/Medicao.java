@@ -17,26 +17,26 @@ import java.time.LocalDate;
 @Table(name = "medicao")
 public class Medicao {
   @Id
-  @Column(name = "id_medicao")
+  @Column(name = "medicao_id")
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  private Long medicaoId;
 
-  @Column(name = "data_medicao")
+  @Column(name = "data")
   private LocalDate data;
 
-  @Column(name = "nivel_sinal_24ghz_medicao")
+  @Column(name = "nivel_sinal_24ghz")
   private Integer nivel_sinal_24ghz;
 
-  @Column(name = "nivel_sinal_5ghz_medicao")
+  @Column(name = "nivel_sinal_5ghz")
   private Integer nivel_sinal_5ghz;
 
-  @Column(name = "velocidade_24ghz_medicao")
+  @Column(name = "velocidade_24ghz")
   private Float velocidade_24ghz;
 
-  @Column(name = "velocidade_5ghz_medicao")
+  @Column(name = "velocidade_5ghz")
   private Float velocidade_5ghz;
 
-  @Column(name = "interferencia_medicao")
+  @Column(name = "interferencia")
   private Integer interferencia;
 
   @ManyToOne

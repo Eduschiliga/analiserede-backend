@@ -4,11 +4,10 @@ import com.eduardo.analiserede.entity.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
-
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
   Usuario findByEmail(String email);
   Usuario findByEmailAndSenha(String email, String senha);
-  Optional<Usuario> findByLogin(String login);
+
+  Usuario findByLogin(String login);
 }

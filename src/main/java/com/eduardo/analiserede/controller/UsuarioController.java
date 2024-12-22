@@ -4,24 +4,30 @@ import com.eduardo.analiserede.model.dto.UsuarioDTO;
 import com.eduardo.analiserede.service.UsuarioService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/usuario")
+@AllArgsConstructor
+@CrossOrigin(origins = "*")
 public class UsuarioController {
-
-  @Autowired
   private UsuarioService usuarioService;
 
   @PostMapping
   @ResponseStatus(code = HttpStatus.CREATED)
-  public UsuarioDTO criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO) {
-    return usuarioService.salvar(usuarioDTO);
+  public UsuarioDTO criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO, UriComponentsBuilder uriBuilder) {
+    UsuarioDTO usuario = usuarioService.salvar(usuarioDTO);
+
+    URI uri = uriBuilder.path("/api/usuario/{id}").buildAndExpand(usuario.getId()).toUri();
+
+    return ResponseEntity.created(uri).body(usuario).getBody();
   }
 
   @GetMapping

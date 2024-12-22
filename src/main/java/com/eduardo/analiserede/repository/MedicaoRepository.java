@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MedicaoRepository extends JpaRepository<Medicao, Long> {
-  List<Medicao> findAllByLocal_Usuario_Id(Long usuarioId);
+  List<Medicao> findAllByLocal_Usuario_UsuarioId(Long localUsuarioUsuarioId);
 }

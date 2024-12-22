@@ -1,41 +1,46 @@
 package com.eduardo.analiserede.service;
 
-import com.eduardo.analiserede.model.dto.AcessDTO;
-import com.eduardo.analiserede.model.dto.AuthenticationDTO;
-import com.eduardo.analiserede.model.dto.UserDetailsImpl;
-import com.eduardo.analiserede.security.jwt.JwtUtils;
+import com.eduardo.analiserede.entity.Usuario;
+import com.eduardo.analiserede.model.LoginRequest;
+import com.eduardo.analiserede.repository.UsuarioRepository;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AuthService {
-  @Autowired
-  private AuthenticationManager authenticationManager;
+@AllArgsConstructor
+public class AuthService implements UserDetailsService {
+  private final UsuarioRepository usuarioRepository;
+  private final TokenService tokenService;
 
   @Autowired
-  private JwtUtils jwtUtils;
+  private ApplicationContext applicationContext;
 
-  public AcessDTO login(AuthenticationDTO authenticationDTO) {
-     try {
-      // cria mecanismo de credencial para o spring
-      UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(authenticationDTO.getLogin(), authenticationDTO.getPassword());
+  @Override
+  public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+    return usuarioRepository.findByLogin(login);
+  }
 
-      // prepara mecanismo para autenticacao
-      Authentication authentication = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+  public String authLogin(@Valid LoginRequest loginRequest) {
+    UsernamePasswordAuthenticationToken usernamePassAuthToken = new UsernamePasswordAuthenticationToken(
+        loginRequest.getLogin(),
+        loginRequest.getSenha()
+    );
 
-      // busca usuario logado
-      UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+    AuthenticationManager authenticationManager = applicationContext.getBean(AuthenticationManager.class);
 
-      String token = jwtUtils.generateTokenFromUserDetailsImpl(userDetails);
+    Authentication authentication = authenticationManager.authenticate(usernamePassAuthToken);
 
-       return new AcessDTO(token);
-     } catch (BadCredentialsException e) {
-      // TODO: login ou senha invalida
-    }
-    return null;
+    return tokenService.gerarToken((Usuario) authentication.getPrincipal());
   }
 }
+
+

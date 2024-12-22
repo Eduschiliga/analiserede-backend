@@ -16,12 +16,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "local")
 public class Local {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private Long id;
+  @Column(name = "local_id")
+  private Long localId;
 
-  @Column(name = "nome_local", nullable = true, length = 180)
+  @Column(name = "nome", nullable = true, length = 180)
   private String nome;
 
   @OneToMany(mappedBy = "local", cascade = CascadeType.ALL)

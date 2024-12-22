@@ -4,26 +4,25 @@ import com.eduardo.analiserede.entity.Usuario;
 import com.eduardo.analiserede.mapper.UsuarioMapper;
 import com.eduardo.analiserede.model.dto.UsuarioDTO;
 import com.eduardo.analiserede.repository.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class UsuarioService {
-  @Autowired
   private UsuarioRepository usuarioRepository;
-
-  @Autowired
   private UsuarioMapper usuarioMapper;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
   public UsuarioDTO salvar(UsuarioDTO usuarioDTO) {
     Usuario usuario = usuarioMapper.usuarioDTOtoUsuario(usuarioDTO);
+
     usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+
     return usuarioMapper.usuarioToUsuarioDTO(usuarioRepository.save(usuario));
   }
 
@@ -32,7 +31,8 @@ public class UsuarioService {
   }
 
   public UsuarioDTO atualizar(UsuarioDTO usuarioDTO) {
-    Usuario usuario = usuarioRepository.findById(usuarioDTO.getId()).orElseThrow(() -> new RuntimeException("Local com id:" + usuarioDTO.getId() + "Não encontrado"));
+    Usuario usuario = usuarioRepository.findById(usuarioDTO.getId()).orElseThrow(() -> new RuntimeException("Usuário com id:" + usuarioDTO.getId() + "Não encontrado"));
+
     usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
 
     if (usuario != null) {

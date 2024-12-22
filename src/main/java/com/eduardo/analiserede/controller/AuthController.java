@@ -1,30 +1,24 @@
 package com.eduardo.analiserede.controller;
 
-import com.eduardo.analiserede.model.dto.AuthenticationDTO;
-import com.eduardo.analiserede.model.dto.UsuarioDTO;
+import com.eduardo.analiserede.model.LoginRequest;
+import com.eduardo.analiserede.model.dto.TokenDTO;
 import com.eduardo.analiserede.service.AuthService;
-import com.eduardo.analiserede.service.UsuarioService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.validation.Valid;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
+@AllArgsConstructor
 @CrossOrigin(origins = "*")
 public class AuthController {
-  @Autowired
-  private AuthService authService;
+  private final AuthService authService;
 
-  @Autowired
-  private UsuarioService usuarioService;
+  @PostMapping()
+  public ResponseEntity<TokenDTO> login(@RequestBody @Valid LoginRequest loginRequest) {
+    TokenDTO tokenDTO = new TokenDTO(authService.authLogin(loginRequest));
 
-  @PostMapping("/login")
-  public ResponseEntity<?> login(@RequestBody AuthenticationDTO authenticationDTO) {
-    return ResponseEntity.ok(authService.login(authenticationDTO));
-  }
-
-  @PostMapping("/registrar")
-  public UsuarioDTO registrar(@RequestBody UsuarioDTO usuarioDTO) {
-    return usuarioService.salvar(usuarioDTO);
+    return ResponseEntity.ok().body(tokenDTO);
   }
 }

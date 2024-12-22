@@ -5,12 +5,11 @@ import com.eduardo.analiserede.entity.Medicao;
 import com.eduardo.analiserede.entity.Usuario;
 import com.eduardo.analiserede.mapper.LocalMapper;
 import com.eduardo.analiserede.mapper.MedicaoMapper;
-import com.eduardo.analiserede.mapper.UsuarioMapper;
 import com.eduardo.analiserede.model.dto.LocalDTO;
 import com.eduardo.analiserede.repository.LocalRepository;
 import com.eduardo.analiserede.repository.UsuarioRepository;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,23 +17,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 public class LocalService {
   private final LocalRepository localRepository;
   private final UsuarioRepository usuarioRepository;
-  private final UsuarioMapper usuarioMapper;
   private final LocalMapper localMapper;
   private final MedicaoMapper medicaoMapper;
   private final MedicaoService medicaoService;
-
-  @Autowired
-  public LocalService(LocalRepository localRepository, UsuarioRepository usuarioRepository, UsuarioMapper usuarioMapper, LocalMapper localMapper, MedicaoMapper medicaoMapper, MedicaoService medicaoService) {
-    this.localRepository = localRepository;
-    this.usuarioRepository = usuarioRepository;
-    this.usuarioMapper = usuarioMapper;
-    this.localMapper = localMapper;
-    this.medicaoMapper = medicaoMapper;
-    this.medicaoService = medicaoService;
-  }
 
   public LocalDTO salvar(@Valid LocalDTO localDTO, String emailUsuario) {
     Usuario usuario = this.usuarioRepository.findByEmail(emailUsuario);
@@ -70,7 +59,7 @@ public class LocalService {
   }
 
   public List<LocalDTO> buscarTodos(Long usuarioId) {
-    return localRepository.findAllByUsuario_Id(usuarioId).stream().map(localMapper::localToLocalDTO).collect(Collectors.toList());
+    return localRepository.findAllByUsuario_UsuarioId(usuarioId).stream().map(localMapper::localToLocalDTO).collect(Collectors.toList());
   }
 
   public void deletar(Long id) {
@@ -106,7 +95,7 @@ public class LocalService {
     if (medicaoTemp != null) {
       local.setMedicoes(new ArrayList<>());
       for (Medicao m : medicaoTemp) {
-        if (m.getId() == null) {
+        if (m.getMedicaoId() == null) {
           medicaoAdicionada.add(this.medicaoMapper.medicaoDTOtoMedicao(this.medicaoService.criarMedicao(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getId())));
         } else {
           medicaoAdicionada.add(this.medicaoMapper.medicaoDTOtoMedicao(this.medicaoService.atualizar(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getId())));

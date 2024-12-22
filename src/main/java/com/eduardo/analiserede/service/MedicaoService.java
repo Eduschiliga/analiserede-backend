@@ -6,21 +6,17 @@ import com.eduardo.analiserede.mapper.MedicaoMapper;
 import com.eduardo.analiserede.model.dto.MedicaoDTO;
 import com.eduardo.analiserede.repository.LocalRepository;
 import com.eduardo.analiserede.repository.MedicaoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class MedicaoService {
-  @Autowired
-  private MedicaoMapper medicaoMapper;
-
-  @Autowired
-  private MedicaoRepository medicaoRepository;
-
-  @Autowired
-  private LocalRepository localRepository;
+  private final MedicaoMapper medicaoMapper;
+  private final MedicaoRepository medicaoRepository;
+  private final LocalRepository localRepository;
 
   public MedicaoDTO criarMedicao(MedicaoDTO medicaoDTO, Long idLocal) {
     Local local = localRepository.findById(idLocal)
@@ -40,13 +36,13 @@ public class MedicaoService {
     local.getMedicoes().add(medicao);
     localRepository.save(local);
 
-    return new MedicaoDTO(medicao.getId(), medicao.getData(), medicao.getNivel_sinal_24ghz(),
+    return new MedicaoDTO(medicao.getMedicaoId(), medicao.getData(), medicao.getNivel_sinal_24ghz(),
         medicao.getNivel_sinal_5ghz(), medicao.getVelocidade_24ghz(), medicao.getVelocidade_5ghz(),
         medicao.getInterferencia());
   }
 
   public List<MedicaoDTO> buscarTodos(Long usuarioId) {
-    return this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoRepository.findAllByLocal_Usuario_Id(usuarioId));
+    return this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoRepository.findAllByLocal_Usuario_UsuarioId(usuarioId));
   }
 
   public MedicaoDTO buscarPorId(Long id) {
