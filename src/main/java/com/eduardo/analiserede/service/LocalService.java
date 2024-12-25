@@ -76,7 +76,8 @@ public class LocalService {
       throw new IllegalArgumentException("ID não pode ser nulo para atualizar Local.");
     }
 
-    Local local = this.localRepository.findById(localDTO.getLocalId()).orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
+    Local local = this.localRepository.findById(localDTO.getLocalId())
+        .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
     local.setNome(localDTO.getNome());
 
@@ -87,9 +88,6 @@ public class LocalService {
       medicaoTemp = localTemp.getMedicoes();
       local.setMedicoes(new ArrayList<>());
     }
-
-    localDTO = this.localMapper.localToLocalDTO(this.localRepository.save(local));
-
 
     List<Medicao> medicaoAdicionada = new ArrayList<>();
     if (medicaoTemp != null) {
@@ -104,6 +102,7 @@ public class LocalService {
       localDTO.setMedicoes(this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoAdicionada));
     }
 
+    localDTO = this.localMapper.localToLocalDTO(this.localRepository.save(local));
 
     return localDTO;
   }

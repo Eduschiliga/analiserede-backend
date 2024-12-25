@@ -33,10 +33,11 @@ public class UsuarioService {
   public UsuarioDTO atualizar(UsuarioDTO usuarioDTO) {
     Usuario usuario = usuarioRepository.findById(usuarioDTO.getUsuarioId()).orElseThrow(() -> new RuntimeException("Usuário com id:" + usuarioDTO.getUsuarioId() + "Não encontrado"));
 
-    usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-
     if (usuario != null) {
-      return usuarioMapper.usuarioToUsuarioDTO(usuarioRepository.save(usuario));
+      Usuario usuarioAtualizar = usuarioMapper.usuarioDTOtoUsuario(usuarioDTO);
+
+      usuarioAtualizar.setSenha(passwordEncoder.encode(usuarioDTO.getSenha()));
+      return usuarioMapper.usuarioToUsuarioDTO(usuarioRepository.save(usuarioAtualizar));
     }
     return null;
   }
