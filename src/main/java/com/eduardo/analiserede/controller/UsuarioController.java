@@ -40,16 +40,6 @@ public class UsuarioController {
     return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorId(idUsuario));
   }
 
-  @GetMapping("/email")
-  public ResponseEntity<UsuarioDTO> buscarPorEmail(@RequestHeader("emailUsuario") String emailUsuario) {
-    return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorEmail(emailUsuario));
-  }
-
-  @GetMapping("/emailsenha")
-  public ResponseEntity<UsuarioDTO> buscarPorEmailESenha(@RequestHeader("emailUsuario") String emailUsuario, @RequestHeader("senhaUsuario") String senhaUsuario) {
-    return ResponseEntity.ok().body(usuarioService.buscarUsuarioPorEmailESenha(emailUsuario, senhaUsuario));
-  }
-
   @DeleteMapping("/{idUsuario}")
   @ResponseStatus(code = HttpStatus.NO_CONTENT)
   public void deletar(@PathVariable @NotNull Long idUsuario) {
