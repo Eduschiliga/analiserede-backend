@@ -7,7 +7,6 @@ import lombok.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -24,7 +23,8 @@ public class Local {
   @Column(name = "nome", length = 180)
   private String nome;
 
-  @OneToMany(mappedBy = "local", orphanRemoval = true, cascade = CascadeType.ALL)
+  @OneToMany(orphanRemoval = true, cascade = CascadeType.ALL)
+  @JoinColumn(name = "local_id")
   private List<Medicao> medicoes = new ArrayList<>();
 
   @ManyToOne

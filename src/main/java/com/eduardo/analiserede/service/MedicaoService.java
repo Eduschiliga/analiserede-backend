@@ -29,7 +29,6 @@ public class MedicaoService {
     medicao.setVelocidade_24ghz(medicaoDTO.getVelocidade_24ghz());
     medicao.setVelocidade_5ghz(medicaoDTO.getVelocidade_5ghz());
     medicao.setInterferencia(medicaoDTO.getInterferencia());
-    medicao.setLocal(local);
 
     medicao = medicaoRepository.save(medicao);
 
@@ -61,10 +60,6 @@ public class MedicaoService {
     Medicao medicao = medicaoRepository.findById(medicaoDTO.getMedicaoId())
         .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
-    Local local = localRepository.findById(idLocal)
-        .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
-
-    medicao.setLocal(local);
     medicao.setData(medicaoDTO.getData());
     medicao.setNivel_sinal_24ghz(medicaoDTO.getNivel_sinal_24ghz());
     medicao.setNivel_sinal_5ghz(medicaoDTO.getNivel_sinal_5ghz());

@@ -37,7 +37,6 @@ public class LocalService {
 
         local.getMedicoes().forEach(m -> {
           m.setMedicaoId(null);
-          m.setLocal(local);
         });
 
       } else {
@@ -72,34 +71,29 @@ public class LocalService {
 
 
   public LocalDTO atualizar(LocalDTO localDTO) {
-    if (localDTO.getLocalId() == null) {
-      throw new IllegalArgumentException("ID não pode ser nulo para atualizar Local.");
-    }
-
     Local local = this.localRepository.findById(localDTO.getLocalId())
         .orElseThrow(() -> new IllegalArgumentException("Local não encontrado"));
 
     local.setNome(localDTO.getNome());
 
-
-    List<Medicao> medicaoTemp = null;
     if (localDTO.getMedicoes() != null) {
-      Local localTemp = this.localMapper.localDTOtoLocal(localDTO);
-      medicaoTemp = localTemp.getMedicoes();
-      local.setMedicoes(new ArrayList<>());
-    }
-
-    List<Medicao> medicaoAdicionada = new ArrayList<>();
-    if (medicaoTemp != null) {
-      local.setMedicoes(new ArrayList<>());
-      for (Medicao m : medicaoTemp) {
-        if (m.getMedicaoId() == null) {
-          medicaoAdicionada.add(this.medicaoMapper.medicaoDTOtoMedicao(this.medicaoService.criarMedicao(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getLocalId())));
+      List<Medicao> medicoesAtualizadas = new ArrayList<>();
+      for (Medicao m : this.localMapper.localDTOtoLocal(localDTO).getMedicoes()) {
+        if (m.getMedicaoId() == null || m.getMedicaoId() == 0) {
+          medicoesAtualizadas.add(this.medicaoMapper.medicaoDTOtoMedicao(
+              this.medicaoService.criarMedicao(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getLocalId())
+          ));
         } else {
-          medicaoAdicionada.add(this.medicaoMapper.medicaoDTOtoMedicao(this.medicaoService.atualizar(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getLocalId())));
+          medicoesAtualizadas.add(this.medicaoMapper.medicaoDTOtoMedicao(
+              this.medicaoService.atualizar(this.medicaoMapper.medicaoToMedicaoDTO(m), localDTO.getLocalId())
+          ));
         }
       }
-      localDTO.setMedicoes(this.medicaoMapper.medicaoListToMedicaoDTOList(medicaoAdicionada));
+
+      local.getMedicoes().removeIf(m -> !medicoesAtualizadas.contains(m));
+
+      local.getMedicoes().clear();
+      local.getMedicoes().addAll(medicoesAtualizadas);
     }
 
     localDTO = this.localMapper.localToLocalDTO(this.localRepository.save(local));

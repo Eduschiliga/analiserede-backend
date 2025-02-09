@@ -1,4 +1,4 @@
-package com.eduardo.analiserede.model;
+package com.eduardo.analiserede.model.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

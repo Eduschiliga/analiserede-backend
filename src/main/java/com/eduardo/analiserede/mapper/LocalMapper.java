@@ -9,6 +9,7 @@ import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface LocalMapper {
+
   Local localDTOtoLocal(LocalDTO localDTO);
 
   LocalDTO localToLocalDTO(Local local);

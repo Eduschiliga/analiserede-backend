@@ -1,8 +1,8 @@
 package com.eduardo.analiserede.controller;
 
-import com.eduardo.analiserede.model.LoginRequest;
 import com.eduardo.analiserede.model.dto.TokenDTO;
 import com.eduardo.analiserede.model.dto.UsuarioDTO;
+import com.eduardo.analiserede.model.request.LoginRequest;
 import com.eduardo.analiserede.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

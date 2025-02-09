@@ -2,8 +2,8 @@ package com.eduardo.analiserede.service;
 
 import com.eduardo.analiserede.entity.Usuario;
 import com.eduardo.analiserede.mapper.UsuarioMapper;
-import com.eduardo.analiserede.model.LoginRequest;
 import com.eduardo.analiserede.model.dto.UsuarioDTO;
+import com.eduardo.analiserede.model.request.LoginRequest;
 import com.eduardo.analiserede.repository.UsuarioRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

@@ -1,6 +1,5 @@
 package com.eduardo.analiserede.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -37,8 +36,4 @@ public class Medicao {
   @Column(name = "interferencia")
   private Integer interferencia;
 
-  @ManyToOne
-  @JoinColumn(name = "local_id")
-  @JsonBackReference
-  private Local local;
 }
