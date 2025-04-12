@@ -1,7 +1,7 @@
 package com.eduardo.analiserede.config.security;
 
 import com.eduardo.analiserede.entity.Usuario;
-import com.eduardo.analiserede.exception.TokenJWTException;
+import com.eduardo.analiserede.exception.customizadas.TokenJWTException;
 import com.eduardo.analiserede.repository.UsuarioRepository;
 import com.eduardo.analiserede.service.TokenService;
 import jakarta.servlet.FilterChain;

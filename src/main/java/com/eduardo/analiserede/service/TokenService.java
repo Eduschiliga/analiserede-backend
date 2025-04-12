@@ -6,7 +6,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.eduardo.analiserede.entity.Usuario;
-import com.eduardo.analiserede.exception.TokenJWTException;
+import com.eduardo.analiserede.exception.customizadas.TokenJWTException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
